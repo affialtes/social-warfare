@@ -84,8 +84,11 @@ Once you have completed step 1, you need to submit a ticket using the [contact f
 
 Many tickets being posted here are issues that simply require adjusting a single setting to accomodate themes or plugins in certain ways. The support team is able to respond to these much, much more quickly than here in the developer's workspace. Since this is the case, any issues submitted without first going through the support team will be deleted. Otherwise it is a waste of both your time and ours.
 
-#### 3. Create an Issue on GitHub
-Only once you have completed the above steps should you submit an issue to GitHub. GitHub is the workspace of the development team. In the rare instances where the support team is unable to solve a particular issue, it will be brought here to be tracked and solved by the development team. GitHub is public so that not only the support team, but also all users can view and track the progress of issues as well as commenting and participating in the conversation regarding each issue.
+#### 3. New Issue on GitHub
+After you have submitted a ticket, the support team will review the information you have provided. 
+In many cases we are already aware of the problem and may be able to provide a solution for you. 
+If this is not the case, the support team will let the developers know. From there the developers will determine when the bug or feature request can be addressed, and a new issue will be created in the appropriate milestone (which correlates to either the next or a future plugin update). 
+GitHub is public so that not only the support team, but also all users can view and track the progress of issues as well as commenting and participating in the conversation regarding each issue.
 
 ### Required Information: Provide this information WHILE submitting an issue
 Once you've gone through support and you're ready to submit a GitHub issue, please **copy and paste the following information into your GitHub issue and fill out the blanks**:
