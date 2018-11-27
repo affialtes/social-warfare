@@ -11,14 +11,14 @@
  * @access    public
  *
  */
-class SWP_Abstract {
+class SWP_Option_Abstract {
 
 
 	/**
-	 * SWP_Utility_Trait provides useful tool like error handling.
+	 * SWP_Debug_Trait provides useful tool like error handling.
 	 *
 	 */
-	use SWP_Utility_Trait;
+	use SWP_Debug_Trait;
 
 
     /**
@@ -146,19 +146,19 @@ class SWP_Abstract {
 
 
     public function get_user_icons() {
-        $options = get_option( 'social_warfare_settings' );
+        // $options = get_option( 'social_warfare_settings' );
+		$user_icons = SWP_Utility::get_option( 'order_of_icons' );
 
-        if ( isset( $options['order_of_icons'] ) ) :
-            $user_icons = $options['order_of_icons'];
-        else:
-            $user_icons = [
+        
+		if ( false === $user_icons ) {
+			return array(
     			'google_plus' => 'google_plus',
     			'twitter'     => 'twitter',
     			'facebook'    => 'facebook',
     			'linkedin'    => 'linkedin',
     			'pinterest'   => 'pinterest'
-    		];
-        endif;
+    		);
+		}
 
         if ( is_array( $user_icons ) && array_key_exists( 'active', $user_icons) ) :
             return $user_icons['active'];

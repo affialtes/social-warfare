@@ -5,4 +5,5 @@ remote-sync.json
 .remote-sync.json
 .DS_Store
 functions/utilities/testing.php
+.imdone/config.json
 node_modules
