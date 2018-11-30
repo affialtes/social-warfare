@@ -115,7 +115,30 @@ window.socialWarfare = window.socialWarfare || {};
 		// This is what fires up the entire plugin's JS functionality.
 		socialWarfare.initPlugin();
 
+
+		/**
+		 * On resize, we're going to purge and re-init the entirety of the
+		 * socialWarfare functions. This will fully reset all of the floating
+		 * buttons which will allow for a clean transition if the size change
+		 * causes the isMobile() check to flip from true to false or vica versa.
+		 *
+		 */
+		$(window).resize(socialWarfare.onWindowResize);
+
 	});
+
+
+	/**
+	 * This will cause our resize event to wait until the user is fully done
+	 * resizing the window prior to resetting and rebuilding the buttons and
+	 * their positioning and re-initializing the plugin JS functions.
+	 *
+	 */
+	var wait;
+	socialWarfare.onWindowResize = function(){
+	  clearTimeout(wait);
+	  wait = setTimeout(socialWarfare.initPlugin, 100 );
+	}
 
 
 	/**
@@ -143,6 +166,10 @@ window.socialWarfare = window.socialWarfare || {};
 	 *
 	 */
 	socialWarfare.initPlugin = function() {
+		$("body").css({
+			paddingTop: socialWarfare.paddingTop,
+			paddingBottom: socialWarfare.paddingBottom
+		});
 
 		socialWarfare.establishPanels();
 		socialWarfare.establishBreakpoint();
@@ -178,7 +205,6 @@ window.socialWarfare = window.socialWarfare || {};
 		 *
 		 */
 		$(window).scroll(socialWarfare.throttle(50, socialWarfare.toggleFloatingButtons));
-		$(window).resize(socialWarfare.throttle(200, socialWarfare.updateFloatingHorizontalDimensions));
 
 	}
 
@@ -307,9 +333,14 @@ window.socialWarfare = window.socialWarfare || {};
 			 * default click handler to handle it. This is for things like the
 			 * email button.
 			 *
+			 * This used to return false, but that cancels the default event
+			 * from firing. The whole purpose of this exclusion is to allow the
+			 * original event to fire so returning without a value allows it to
+			 * work.
+			 *
 			 */
 			if ($(this).hasClass('noPop')) {
-				return false;
+				return event;
 			}
 
 
@@ -319,8 +350,8 @@ window.socialWarfare = window.socialWarfare || {};
 			 * we need to make sure that this attribute exists.
 			 *
 			 */
-			if (false == $(this).data('link')) {
-				return false;
+			if ('undefined' == typeof $(this).data('link')) {
+				return event;
 			}
 
 
@@ -439,11 +470,6 @@ window.socialWarfare = window.socialWarfare || {};
 			return;
 		}
 
-		//* Or we are on desktop and not using top/bottom floaters:
-		if (!socialWarfare.isMobile() && floatLocation != 'top' && floatLocation != 'bottom') {
-			return;
-		}
-
 		//* Set the location (top or bottom) of the bar depending on
 		if (socialWarfare.isMobile()) {
 			barLocation = mobileFloatLocation;
@@ -474,7 +500,22 @@ window.socialWarfare = window.socialWarfare || {};
 			return;
 		}
 
-		var left, width = 0;
+
+		// If there is no floating set, just bail.
+		if(!socialWarfare.panels.floatingHorizontal) {
+			return;
+		}
+
+
+		/**
+		 * We'll create the default width and left properties here. Then we'll
+		 * attempt to pull these properties from the actual panel that we are
+		 * cloning below. If those measurements exist, we clone them. If not,
+		 * we use these defaults.
+		 *
+		 */
+		var width = "100%";
+		var left  = 0;
 		var panel = socialWarfare.panels.staticHorizontal;
 
 		if (socialWarfare.isMobile()) {
@@ -562,8 +603,12 @@ window.socialWarfare = window.socialWarfare || {};
 	 *
 	 */
 	socialWarfare.toggleFloatingButtons = function() {
+
 		// Adjust the floating bar
 		var location = socialWarfare.panels.staticHorizontal.data('float');
+		if( true == socialWarfare.isMobile() ) {
+			var location = socialWarfare.panels.staticHorizontal.data('float-mobile');
+		}
 
 		//* There are no floating buttons enabled, hide any that might exist.
 		if (location == 'none') {
@@ -618,6 +663,7 @@ window.socialWarfare = window.socialWarfare || {};
 		if (socialWarfare.isMobile()) {
 			return socialWarfare.panels.floatingSide.hide();
 		}
+		socialWarfare.panels.floatingSide.show();
 
 		//* No buttons panel! Manually re-define ${visibility}.
 		if (!socialWarfare.panels.floatingSide || !socialWarfare.panels.floatingSide.length) {
@@ -704,7 +750,7 @@ window.socialWarfare = window.socialWarfare || {};
 		}
 
 		//* Update padding to be either initial values, or to use padding for floatingHorizontal panels.
-		$("body").css(paddingProp, newPadding);
+       $("body").css(paddingProp, newPadding);
 	}
 
 
